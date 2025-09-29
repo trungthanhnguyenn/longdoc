@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  qdrant:
+    image: qdrant/qdrant:v1.8.1
+    container_name: longdoc-qdrant
+    ports:
+      - "1203:1203"  # HTTP API
+      - "6334:6334"  # GRPC API
+    environment:
+      - QDRANT__SERVICE__HTTP_PORT=1203
+      - QDRANT__SERVICE__GRPC_PORT=6334
+      - QDRANT__SERVICE__ENABLE_CORS=true
+    volumes:
+      - ./qdrant/data:/qdrant/storage
+      - ./qdrant/config:/qdrant/config
+    restart: unless-stopped
+    networks:
+      - longdoc-network
+
+networks:
+  longdoc-network:
+    driver: bridge
+
+volumes:
+  qdrant-data:
+    driver: local
